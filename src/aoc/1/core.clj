@@ -9,10 +9,10 @@
        (map (fn [x] (when (not= "" x) (Integer/parseInt x))))
        (partition-by nil?)
        (filter #(some? (first %)))
-       (map (partial apply +))
-       (apply max)))
+       (map (partial apply +))))
 
 (defn solution-1 []
-  (-> (io/resource "1_input")
-      slurp
-      get-bags))
+  (apply max
+         (-> (io/resource "1_input")
+             slurp
+             get-bags)))
