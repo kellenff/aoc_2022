@@ -16,3 +16,13 @@
          (-> (io/resource "1_input")
              slurp
              get-bags)))
+
+(defn solution-1-1 []
+  (let [sorted (-> (io/resource "1_input")
+                   slurp
+                   get-bags
+                   sort
+                   reverse)]
+    (->> sorted
+         (take 3)
+         (apply +))))
