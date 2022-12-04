@@ -13,6 +13,23 @@
    "Y" :paper
    "Z" :scissors})
 
+(def dired->result
+  {"X" :loss
+   "Y" :tie
+   "Z" :win})
+
+(defn ->dired-shape [opp dired]
+  (if (= :tie dired)
+    opp
+    (condp = [opp dired]
+      [:rock :win] :paper
+      [:rock :loss] :scissors
+      [:paper :win] :scissors
+      [:paper :loss] :rock
+      [:scissors :win] :rock
+      [:scissors :loss] :paper
+      :default opp)))
+
 (def result
   {[:rock :paper]        :win
    [:rock :scissors]     :loss
@@ -34,13 +51,13 @@
    :paper    2
    :scissors 3})
 
-(defn parse-line [ln]
+(defn parse-line [get-second ln]
   (let [[opp own] (s/split ln #"\s")]
-    [(opp->shape opp) (own->shape own)]))
+    [(opp->shape opp) (get-second own)]))
 
-(defn parse-lines [inp]
+(defn parse-lines [inp parse]
   (->> (s/split-lines inp)
-       (map parse-line)))
+       (map parse)))
 
 (defn get-score-per-line [ln]
   (let [result (result ln)
@@ -48,8 +65,19 @@
     (+ (result->score result)
        (shape->score my-shape))))
 
-(defn solution-2 []
+(defn get-score-per-line-2 [[opp dired]]
+  (let [my-shape (->dired-shape opp dired)]
+    (+ (result->score dired)
+       (shape->score my-shape))))
+
+(defn solution-2-1 []
   (let [inp (-> (io/resource "2_input") slurp)
-        rounds (parse-lines inp)
+        rounds (parse-lines inp (partial parse-line own->shape))
         score-per-line (map get-score-per-line rounds)]
+    (apply + score-per-line)))
+
+(defn solution-2-2 []
+  (let [inp (-> (io/resource "2_input") slurp)
+        rounds (parse-lines inp (partial parse-line dired->result))
+        score-per-line (map get-score-per-line-2 rounds)]
     (apply + score-per-line)))
