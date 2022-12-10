@@ -19,18 +19,16 @@
     (<= l-start r-start l-end)
     (<= r-start l-start r-end)))
 
-(defn solution-4-1 []
+(defn solution [pred]
   (->> (io/resource "4_input")
        slurp
        str/split-lines
        (map parse-line)
-       (filter is-surrounded)
+       (filter pred)
        count))
 
+(defn solution-4-1 []
+  (solution is-surrounded))
+
 (defn solution-4-2 []
-  (->> (io/resource "4_input")
-       slurp
-       str/split-lines
-       (map parse-line)
-       (filter overlaps)
-       count))
+  (solution overlaps))
