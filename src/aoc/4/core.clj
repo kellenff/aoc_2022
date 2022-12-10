@@ -14,10 +14,23 @@
     (<= l-start r-start r-end l-end)
     (<= r-start l-start l-end r-end)))
 
+(defn overlaps [[[l-start l-end] [r-start r-end]]]
+  (or
+    (<= l-start r-start l-end)
+    (<= r-start l-start r-end)))
+
 (defn solution-4-1 []
   (->> (io/resource "4_input")
        slurp
        str/split-lines
        (map parse-line)
        (filter is-surrounded)
+       count))
+
+(defn solution-4-2 []
+  (->> (io/resource "4_input")
+       slurp
+       str/split-lines
+       (map parse-line)
+       (filter overlaps)
        count))
